@@ -1,0 +1,74 @@
+services:
+  kratos:
+    image: oryd/kratos:v1.2.0
+    ports:
+      - '4433:4433'
+      - '4434:4434' 
+    restart: unless-stopped
+    command: serve -c /etc/config/kratos/kratos.yml
+    environment:
+      - DSN=sqlite:///var/lib/sqlite/db.sqlite?_fk=true
+    volumes:
+      - type: bind
+        source: ./config/kratos/email-password
+        target: /etc/config/kratos
+      - type: volume
+        source: kratos-sqlite
+        target: /var/lib/sqlite
+        read_only: false
+  
+  kratos-migrate:
+    image: oryd/kratos:v1.2.0
+    environment:
+      - DSN=sqlite:///var/lib/sqlite/db.sqlite?_fk=true&mode=rwc
+    volumes:
+      - type: volume
+        source: kratos-sqlite
+        target: /var/lib/sqlite
+        read_only: false
+      - type: bind
+        source: ./config/kratos/email-password
+        target: /etc/config/kratos
+    command: -c /etc/config/kratos/kratos.yml migrate sql -e --yes
+    restart: on-failure
+
+  keto:
+    image: oryd/keto:v0.14.0
+    ports:
+      - "4466:4466"
+      - "4467:4467"
+    command: serve -c /home/ory/keto.yml
+    restart: on-failure
+    volumes:
+      - type: bind
+        source: ./config/keto/keto.yml
+        target: /home/ory/keto.yml
+
+  oathkeeper:
+    image: oryd/oathkeeper:v0.40.9
+    ports:
+      - "4455:4455"  
+      - "4456:4456" 
+    command: serve --config=/etc/config/oathkeeper/config.yaml
+    volumes:
+      - type: bind
+        source: ./config/oathkeeper
+        target: /etc/config/oathkeeper
+    restart: on-failure
+
+  kratos-selfservice-ui-node:
+    image: oryd/kratos-selfservice-ui-node:v1.2.0
+    environment:
+      - KRATOS_PUBLIC_URL=http://kratos:4433/
+      - KRATOS_BROWSER_URL=http://127.0.0.1:4433/
+      - COOKIE_SECRET=changeme
+      - CSRF_COOKIE_NAME=ory_csrf_ui
+      - CSRF_COOKIE_SECRET=changeme
+      - PORT=3333
+      - SECURITY_MODE=
+    restart: on-failure
+    ports:
+      - "3333:3333"
+
+volumes:
+  kratos-sqlite:

@@ -1,0 +1,57 @@
+[
+  {
+    "id": "hello:protected",
+    "upstream": {
+      "url": "http://host.docker.internal:8080"
+    },
+    "match": {
+      "url": "http://<127.0.0.1|localhost>:4455/<.*>",
+      "methods": [
+        "GET"
+      ]
+    },
+    "authenticators": [
+      {
+        "handler": "cookie_session"
+      }
+    ],
+    "authorizer": {
+      "handler": "remote_json"
+    },
+    "mutators": [
+      {
+        "handler": "header"
+      }
+    ],
+    "errors": [
+      {
+        "handler": "json",
+        "config": {
+          "when": [
+            {
+              "request": {
+                "header": {
+                  "accept": ["application/json"]
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "handler": "redirect",
+        "config": {
+          "when": [
+            {
+              "request": {
+                "header": {
+                  "accept": ["text/*"]
+                }
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+]
