@@ -29,11 +29,6 @@ mutators:
         X-User: "{{ print .Subject }}"
   noop:
     enabled: true
-  id_token:
-    enabled: true
-    config:
-      issuer_url: http://localhost:4455/
-      jwks_url: file:///etc/config/oathkeeper/jwks.json
 
 authorizers:
   allow:
@@ -46,9 +41,9 @@ authorizers:
       remote: http://keto:4466/relation-tuples/check
       payload: |
         {
-          "namespace": "hello",
-          "object": "hello",
-          "relation": "read",
+          "namespace": "todos",
+          "object": "{{ print .MatchContext.URL.EscapedPath }}",
+          "relation": "{{ print .MatchContext.Method }}",
           "subject_id": "{{ print .Subject }}"
         }
 

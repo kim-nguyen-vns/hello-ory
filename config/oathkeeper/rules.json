@@ -1,13 +1,14 @@
 [
   {
-    "id": "hello:protected",
+    "id": "todos:protected",
     "upstream": {
       "url": "http://host.docker.internal:8080"
     },
     "match": {
       "url": "http://<127.0.0.1|localhost>:4455/<.*>",
       "methods": [
-        "GET"
+        "GET",
+        "POST"
       ]
     },
     "authenticators": [

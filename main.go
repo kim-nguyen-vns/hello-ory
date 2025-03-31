@@ -1,22 +1,31 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 )
 
-// helloHandler responds to HTTP requests with "Hello, World!"
-func helloHandler(w http.ResponseWriter, r *http.Request) {
-	log.Println(r.Header)
-	fmt.Fprintf(w, "Hello, World!")
-}
+var todos = []string{}
 
 func main() {
-	// Register handler function for the root URL path
-	http.HandleFunc("/hello", helloHandler)
+	http.HandleFunc("/todos", func(w http.ResponseWriter, r *http.Request) {
+		switch r.Method {
+		case http.MethodGet:
+			log.Println("GET /todos")
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusOK)
+			json.NewEncoder(w).Encode(todos)
+		case http.MethodPost:
+			log.Println("POST /todos")
+			p, _ := io.ReadAll(r.Body)
+			todos = append(todos, string(p))
+			w.WriteHeader(http.StatusCreated)
+		}
+	})
 
-	// Start the HTTP server on port 8080
 	fmt.Println("Server is running on port 8080")
 	err := http.ListenAndServe(":8080", nil)
 	if err != nil {
