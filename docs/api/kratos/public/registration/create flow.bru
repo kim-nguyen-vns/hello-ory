@@ -1,0 +1,17 @@
+meta {
+  name: create flow
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{kratos_public}}/self-service/registration/browser
+  body: none
+  auth: inherit
+}
+
+script:post-response {
+  bru.setEnvVar("regFlowId", res.body.id);
+  bru.setEnvVar("regFlowCookie",res.headers['set-cookie'][0])
+  bru.setEnvVar("regFlowCsrf", res.body.ui.nodes.find(i => i.attributes.name==='csrf_token').attributes.value)
+}

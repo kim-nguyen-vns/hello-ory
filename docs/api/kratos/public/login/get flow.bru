@@ -1,0 +1,19 @@
+meta {
+  name: get flow
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{kratos_public}}/self-service/login/flows?id={{loginFlowId}}
+  body: none
+  auth: inherit
+}
+
+params:query {
+  id: {{loginFlowId}}
+}
+
+headers {
+  Cookie: {{loginFlowCookie}}
+}
