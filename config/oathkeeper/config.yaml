@@ -8,32 +8,14 @@ access_rules:
   repositories:
     - file:///etc/config/oathkeeper/rules.json
 
-errors:
-  fallback:
-    - json
-  handlers:
-    json:
-      enabled: true
-      config:
-        verbose: true
-    redirect:
-      enabled: true
-      config:
-        to: https://www.ory.sh/docs
-
 mutators:
+  noop:
+    enabled: true
   header:
     enabled: true
     config:
       headers:
-        X-User: "{{ print .Subject }}"
-  noop:
-    enabled: true
-  id_token:
-    enabled: true
-    config:
-      issuer_url: http://localhost:4455/
-      jwks_url: file:///etc/config/oathkeeper/jwks.json
+        X-User-ID: "{{ print .Subject }}"
 
 authorizers:
   allow:
@@ -47,16 +29,14 @@ authorizers:
       payload: |
         {
           "namespace": "hello",
-          "object": "hello",
-          "relation": "read",
+          "object": "/hello",
+          "relation": "{{ print .MatchContext.Method }}",
           "subject_id": "{{ print .Subject }}"
         }
 
 authenticators:
-  anonymous:
+  noop:
     enabled: true
-    config:
-      subject: guest
   cookie_session:
     enabled: true
     config:

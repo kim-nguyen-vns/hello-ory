@@ -1,13 +1,78 @@
 [
   {
-    "id": "hello:protected",
+    "id": "kratos:public",
     "upstream": {
-      "url": "http://host.docker.internal:8080"
+      "url": "http://kratos:4433",
+      "strip_path": "/kratos"
     },
     "match": {
-      "url": "http://<127.0.0.1|localhost>:4455/<.*>",
+      "url": "http://localhost:4455/kratos/<.*>",
       "methods": [
-        "GET"
+        "GET",
+        "PUT",
+        "POST",
+        "PATCH",
+        "DELETE"
+      ]
+    },
+    "authenticators": [
+      {
+        "handler": "noop"
+      }
+    ],
+    "authorizer": {
+      "handler": "allow"
+    },
+    "mutators": [
+      {
+        "handler": "noop"
+      }
+    ]
+  },
+  {
+    "id": "kratos:public",
+    "upstream": {
+      "url": "http://keto:4466",
+      "strip_path": "/keto"
+    },
+    "match": {
+      "url": "http://localhost:4455/keto/<.*>",
+      "methods": [
+        "GET",
+        "PUT",
+        "POST",
+        "PATCH",
+        "DELETE"
+      ]
+    },
+    "authenticators": [
+      {
+        "handler": "noop"
+      }
+    ],
+    "authorizer": {
+      "handler": "allow"
+    },
+    "mutators": [
+      {
+        "handler": "noop"
+      }
+    ]
+  },
+  {
+    "id": "hello:protected",
+    "upstream": {
+      "url": "http://host.docker.internal:8080",
+      "strip_path": "/hello"
+    },
+    "match": {
+      "url": "http://localhost:4455/hello/<.*>",
+      "methods": [
+        "GET",
+        "PUT",
+        "POST",
+        "PATCH",
+        "DELETE"
       ]
     },
     "authenticators": [
@@ -21,36 +86,6 @@
     "mutators": [
       {
         "handler": "header"
-      }
-    ],
-    "errors": [
-      {
-        "handler": "json",
-        "config": {
-          "when": [
-            {
-              "request": {
-                "header": {
-                  "accept": ["application/json"]
-                }
-              }
-            }
-          ]
-        }
-      },
-      {
-        "handler": "redirect",
-        "config": {
-          "when": [
-            {
-              "request": {
-                "header": {
-                  "accept": ["text/*"]
-                }
-              }
-            }
-          ]
-        }
       }
     ]
   }

@@ -1,0 +1,15 @@
+meta {
+  name: hello
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{hello_host}}/hello
+  body: none
+  auth: inherit
+}
+
+headers {
+  Cookie: {{oryKratosSession}}
+}
