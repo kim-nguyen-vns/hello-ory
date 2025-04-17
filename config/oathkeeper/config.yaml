@@ -29,7 +29,7 @@ authorizers:
       payload: |
         {
           "namespace": "hello",
-          "object": "/hello",
+          "object": "{{ trimPrefix .MatchContext.URL.Path "/hello" }}",
           "relation": "{{ print .MatchContext.Method }}",
           "subject_id": "{{ print .Subject }}"
         }
