@@ -8,7 +8,7 @@ import (
 
 // helloHandler responds to HTTP requests with "Hello, World!"
 func helloHandler(w http.ResponseWriter, r *http.Request) {
-	log.Println(r.Header)
+	log.Printf("Path: %s, User: %s\n", r.URL.Path, r.Header.Get("X-User-ID"))
 	fmt.Fprintf(w, "Hello, World!")
 }
 
