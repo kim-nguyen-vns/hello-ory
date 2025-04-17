@@ -1,0 +1,30 @@
+meta {
+  name: register
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{kratos_public}}/self-service/registration?flow={{regFlowId}}
+  body: json
+  auth: inherit
+}
+
+params:query {
+  flow: {{regFlowId}}
+}
+
+headers {
+  Cookie: {{regFlowCookie}}
+}
+
+body:json {
+  {
+    "csrf_token": "{{regFlowCsrf}}",
+    "method": "password",
+    "traits": {
+      "email": "kim.nguyen@email.com"
+    },
+    "password": "SupperPassword2025$"
+  }
+}

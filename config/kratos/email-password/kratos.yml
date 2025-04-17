@@ -2,7 +2,7 @@ version: v0.13.0
 
 serve:
   public:
-    base_url: http://127.0.0.1:4433/
+    base_url: http://kratos:4433/
     cors:
       enabled: true
   admin:
@@ -12,8 +12,6 @@ selfservice:
   default_browser_return_url: http://127.0.0.1:3333/welcome
   allowed_return_urls:
     - http://127.0.0.1:3333
-    - http://localhost:19006/Callback
-    - exp://localhost:8081/--/Callback
 
   methods:
     password:
@@ -91,10 +89,6 @@ identity:
   schemas:
     - id: default
       url: file:///etc/config/kratos/identity.schema.json
-
-courier:
-  smtp:
-    connection_uri: smtps://test:test@mailslurper:1025/?skip_ssl_verify=true
 
 feature_flags:
   use_continue_with_transitions: true

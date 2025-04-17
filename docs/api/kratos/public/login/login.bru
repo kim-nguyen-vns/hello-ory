@@ -1,0 +1,35 @@
+meta {
+  name: login
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{kratos_public}}/self-service/login?flow={{loginFlowId}}
+  body: json
+  auth: inherit
+}
+
+params:query {
+  flow: {{loginFlowId}}
+}
+
+headers {
+  Cookie: {{loginFlowCookie}}
+}
+
+body:json {
+  {
+    "csrf_token": "{{loginFlowCsrf}}",
+    "method": "password",
+    "identifier": "kim.nguyen@email.com",
+    "password": "SupperPassword2025$"
+  }
+}
+
+script:post-response {
+  const ck = res.headers['set-cookie'][1]
+  const ss = ck.split(";")[0]
+  bru.setEnvVar("oryKratosSession",ss)
+  bru.setEnvVar("uid",res.body.session.identity.id)
+}

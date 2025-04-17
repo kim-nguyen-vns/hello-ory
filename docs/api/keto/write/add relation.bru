@@ -1,0 +1,20 @@
+meta {
+  name: add relation
+  type: http
+  seq: 1
+}
+
+put {
+  url: {{keto_write}}/admin/relation-tuples
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "namespace": "hello",
+    "object": "/hello",
+    "relation": "GET",
+    "subject_id": "{{uid}}"
+  }
+}
