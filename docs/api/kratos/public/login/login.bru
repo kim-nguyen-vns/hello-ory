@@ -32,4 +32,5 @@ script:post-response {
   const ss = ck.split(";")[0]
   bru.setEnvVar("oryKratosSession",ss)
   bru.setEnvVar("uid",res.body.session.identity.id)
+  bru.setEnvVar("sessionId",res.body.session.id)
 }
